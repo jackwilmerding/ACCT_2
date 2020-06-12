@@ -26,20 +26,10 @@ public class Backend {
         }
         return hm;
     }
-    public String readWholesale(String path) {
-        Scanner scan = new Scanner(path);
-        String csv = "";
-        while(scan.hasNextLine()) {
-            csv += scan.nextLine() + "\n";
-        }
-        csv = csv.substring(0, csv.length() - 1);
-        return csv;
-    }
     public void writer(String firstName, String lastName, String phone) throws IOException {
         File file = new File(date() + ".csv");
         if(file.exists() && !file.isDirectory()) {
-            String csv = readWholesale(date() + ".csv");
-            csv += "\n" + phone + "," + firstName + "," + lastName;
+            String csv = "\n" + phone + "," + firstName + "," + lastName;
             FileWriter fwriter = new FileWriter(date() + ".csv", true);
             fwriter.write(csv);
             fwriter.flush();
@@ -47,7 +37,11 @@ public class Backend {
         }
         else {
             FileWriter fWriter = new FileWriter(date() + ".csv");
-            fWriter.write(phone + "," + firstName + "," + lastName);
+            String info = phone + "," + firstName + "," + lastName;
+            System.out.print(info);
+            fWriter.write(info);
+            fWriter.flush();
+            fWriter.close();
         }
         return;
     }
