@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-
 public class Display extends JFrame {
 
     public static final int WIDTH = 600;

@@ -8,7 +8,7 @@ public class IncidentReport extends JPanel{
 
     public IncidentReport(JPanel p) {
         cardPanel = p;
-
+        Backend b = new Backend();
 
 
         setSize(Display.WIDTH, Display.HEIGHT);
@@ -37,6 +37,10 @@ public class IncidentReport extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //populates the combobox
+                String query = phone.getText();
+                for (String date : b.search(query)) {
+                    dates.addItem(new ComboItem(date));
+                }
                 return;
             }
         });
@@ -54,13 +58,31 @@ public class IncidentReport extends JPanel{
         });
         add(backButton);
 
+        JLabel loading = new JLabel("Processing...");
+        loading.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
+
+        JLabel success = new JLabel("Success!");
+        success.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
+        success.setForeground(Color.GREEN);
+
         JButton enter2 = new JButton("Enter");
         enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
         add(enter2);
         enter2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                add(loading);
+                remove(loading);
                 //Takes selection from combobox, sends report based on data
+                //TODO
+                add(success);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                remove(success);
+                return;
             }
         });
     }

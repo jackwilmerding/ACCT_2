@@ -4,13 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
 
 public class CustomerLogger extends JPanel {
     private JPanel cardPanel;
 
     public CustomerLogger(JPanel p) {
         cardPanel = p;
-
+        Backend b = new Backend();
 
 
         setSize(Display.WIDTH, Display.HEIGHT);
@@ -55,6 +56,19 @@ public class CustomerLogger extends JPanel {
         JButton enter = new JButton("Enter");
         enter.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 60, 80, 20);
         add(enter);
+        enter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    b.writer(firstName.getText(), lastName.getText(), phone.getText());
+                    firstName.setText("");
+                    lastName.setText("");
+                    phone.setText("");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
         /*
         firstName.addFocusListener(new FocusAdapter() {
             @Override
