@@ -47,6 +47,7 @@ public class Backend {
     }
     public String[] search(String phone) {
         File[] files = new File("ACCT 2/").listFiles();
+        //TODO this is a null pointer exception for files
         ArrayList<String> dates = new ArrayList<String>();
         for(File file : files) {
             if (file.getName().endsWith(".csv")) {
