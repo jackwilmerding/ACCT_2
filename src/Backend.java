@@ -1,11 +1,8 @@
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Scanner;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.util.Calendar;
