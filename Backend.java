@@ -35,7 +35,6 @@ public class Backend {
         else {
             FileWriter fWriter = new FileWriter(date() + ".csv");
             String info = email + "," + firstName + "," + lastName;
-            System.out.print(info);
             fWriter.write(info);
             fWriter.flush();
             fWriter.close();
@@ -43,9 +42,8 @@ public class Backend {
         return;
     }
     public String[] search(String email) {
-        File dir = new File("ACCT 2/");
+        File dir = new File(".");
         File[] files = dir.listFiles();
-        //TODO this is a null pointer exception for files
         ArrayList<String> dates = new ArrayList<String>();
         for(File file : files) {
             if (file != null && file.getName().endsWith(".csv")) {
@@ -54,7 +52,8 @@ public class Backend {
                     String line = scan.nextLine();
                     String[] data = line.split(",");
                     if (data[0].equals(email)) {
-                        dates.add(data[0]);
+                        dates.add(file.getName());
+                        System.out.println("Added " + file.getName());
                     }
                 }
             }
