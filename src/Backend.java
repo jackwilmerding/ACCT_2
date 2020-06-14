@@ -14,6 +14,7 @@ public class Backend {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     }
+    /*
     public HashMap<String, Patron> reader(String queryDate) throws FileNotFoundException {
         HashMap hm = new HashMap<String, Patron>();
         Scanner scan = new Scanner(new File(date()));
@@ -24,19 +25,24 @@ public class Backend {
         }
         return hm;
     }
+    */
     public void writer(String firstName, String lastName, String email) throws IOException {
         File file = new File(date() + ".csv");
         if(file.exists() && !file.isDirectory()) {
             String csv = "\n" + email + "," + firstName + "," + lastName;
             FileWriter fwriter = new FileWriter(date() + ".csv", true);
-            fwriter.write(csv);
+            if ((csv != ",,") && (csv.split(",").length == 3)) {
+                fwriter.write(csv);
+            }
             fwriter.flush();
             fwriter.close();
         }
         else {
             FileWriter fWriter = new FileWriter(date() + ".csv");
             String info = email.toLowerCase() + "," + firstName + "," + lastName;
-            fWriter.write(info);
+            if ((info != ",,") && (info.split(",").length == 3)) {
+                fWriter.write(info);
+            }
             fWriter.flush();
             fWriter.close();
         }
@@ -56,9 +62,11 @@ public class Backend {
                 }
                 while(scan.hasNextLine()) {
                     String line = scan.nextLine();
-                    String[] data = line.split(",");
-                    if (data[0].toLowerCase().equals(email.toLowerCase())) {
-                        dateItems.add(file.getName());
+                    if ((line != ",,") && (line.split(",").length == 3)){
+                        String[] data = line.split(",");
+                        if (data[0].toLowerCase().equals(email.toLowerCase())) {
+                            dateItems.add(file.getName());
+                        }
                     }
                 }
             }

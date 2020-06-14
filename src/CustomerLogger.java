@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.IOException;
-
 public class CustomerLogger extends JPanel {
     private JPanel cardPanel;
 
@@ -46,7 +43,7 @@ public class CustomerLogger extends JPanel {
         add(lastName);
 
         JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setBounds(140, Display.HEIGHT/2 - 30, 500, 20);
+        emailLabel.setBounds(Display.HEIGHT/2, Display.HEIGHT/2 - 30, 80, 20);
         add(emailLabel);
         JTextField email = new JTextField("");
         email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 5, 200, 20);
@@ -59,26 +56,22 @@ public class CustomerLogger extends JPanel {
         enter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    b.writer(firstName.getText(), lastName.getText(), email.getText());
-                    firstName.setText("");
-                    lastName.setText("");
-                    email.setText("");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                if((firstName.getText() != "") && (lastName.getText() != "") && (email.getText() != "")) {
+                    try {
+                        b.writer(firstName.getText(), lastName.getText(), email.getText());
+                        firstName.setText("");
+                        lastName.setText("");
+                        email.setText("");
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    return;
+                }
+                else {
+                    return;
                 }
             }
         });
-        /*
-        firstName.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                firstName.setText("");
-                firstName.removeFocusListener(this);
-            }
-        });
-        */
-
     }
 
 }

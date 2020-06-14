@@ -21,7 +21,7 @@ public class IncidentReport extends JPanel{
         setLayout(null);
 
         JLabel emailLabel = new JLabel("Customer Email:");
-        emailLabel.setBounds(200, Display.HEIGHT/2 - 70, 500, 20);
+        emailLabel.setBounds(Display.WIDTH/2 - 50, Display.HEIGHT/2 - 70, 500, 20);
         add(emailLabel);
         JTextField email = new JTextField("");
         email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 45, 200, 20);
