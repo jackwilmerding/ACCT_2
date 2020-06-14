@@ -14,33 +14,35 @@ public class IncidentReport extends JPanel{
         setSize(Display.WIDTH, Display.HEIGHT);
         setLayout(null);
 
-        JLabel phoneLabel = new JLabel("Customer Phone Number (No dashes or spaces, include the 1):");
-        phoneLabel.setBounds(110, Display.HEIGHT/2 - 70, 500, 20);
-        add(phoneLabel);
-        JTextField phone = new JTextField("");
-        phone.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 45, 200, 20);
-        phone.setHorizontalAlignment(SwingConstants.CENTER);
-        add(phone);
+        JLabel emailLabel = new JLabel("Customer Email:");
+        emailLabel.setBounds(200, Display.HEIGHT/2 - 70, 500, 20);
+        add(emailLabel);
+        JTextField email = new JTextField("");
+        email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 45, 200, 20);
+        email.setHorizontalAlignment(SwingConstants.CENTER);
+        add(email);
 
-        JLabel dateLabel = new JLabel("Date Visted (YYYY-MM-DD):");
+        JLabel dateLabel = new JLabel("Date Visited (YYYY-MM-DD):");
         dateLabel.setBounds(205, Display.HEIGHT/2 + 10, 500, 20);
         add(dateLabel);
 
         JComboBox dates = new JComboBox();
         dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
-        add(dates);
 
         JButton enter1 = new JButton("Enter");
-        enter1.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 - 15, 80, 20);
+        enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
         add(enter1);
         enter1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //populates the combobox
-                String query = phone.getText();
+                String query = email.getText().toLowerCase();
+                enter1.setText("Searching...");
                 for (String date : b.search(query)) {
                     dates.addItem(new ComboItem(date));
                 }
+                add(dates);
+                enter1.setText("Enter");
                 return;
             }
         });
@@ -82,6 +84,8 @@ public class IncidentReport extends JPanel{
                     interruptedException.printStackTrace();
                 }
                 remove(success);
+                remove(dates);
+                email.setText("");
                 return;
             }
         });

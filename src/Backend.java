@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ public class Backend {
         }
         return hm;
     }
-    public void writer(String firstName, String lastName, String phone) throws IOException {
+    public void writer(String firstName, String lastName, String email) throws IOException {
         File file = new File(date() + ".csv");
         if(file.exists() && !file.isDirectory()) {
-            String csv = "\n" + phone + "," + firstName + "," + lastName;
+            String csv = "\n" + email + "," + firstName + "," + lastName;
             FileWriter fwriter = new FileWriter(date() + ".csv", true);
             fwriter.write(csv);
             fwriter.flush();
@@ -34,30 +35,41 @@ public class Backend {
         }
         else {
             FileWriter fWriter = new FileWriter(date() + ".csv");
-            String info = phone + "," + firstName + "," + lastName;
-            System.out.print(info);
+            String info = email.toLowerCase() + "," + firstName + "," + lastName;
             fWriter.write(info);
             fWriter.flush();
             fWriter.close();
         }
         return;
     }
-    public String[] search(String phone) {
-        File[] files = new File("ACCT 2/").listFiles();
-        //TODO this is a null pointer exception for files
-        ArrayList<String> dates = new ArrayList<String>();
+    public String[] search(String email) {
+        File dir = new File(".");
+        File[] files = dir.listFiles();
+        ArrayList<String> dateItems = new ArrayList<>();
         for(File file : files) {
-            if (file.getName().endsWith(".csv")) {
-                Scanner scan = new Scanner(file.getName());
+            if (file != null && file.getName().endsWith(".csv")) {
+                Scanner scan = null;
+                try {
+                    scan = new Scanner(new File(file.getName()));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 while(scan.hasNextLine()) {
                     String line = scan.nextLine();
                     String[] data = line.split(",");
-                    if (data[0].equals(phone)) {
-                        dates.add(data[0]);
+                    System.out.println(data);
+                    for(int i = 0; i < 3; i++) {
+                        System.out.println(data[i]);
+                    }
+                    if (data[0].toLowerCase().equals(email.toLowerCase())) {
+                        dateItems.add(file.getName());
                     }
                 }
             }
         }
-        return dates.toArray(new String[dates.size()]);
+        for(int i = 0; i < dateItems.size(); i++) {
+            System.out.println(dateItems.get(i));
+        }
+        return dateItems.toArray(new String[dateItems.size()]);
     }
 }

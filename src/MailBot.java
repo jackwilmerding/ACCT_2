@@ -45,10 +45,8 @@ public class MailBot {
             // Now set the actual message
             message.setText("Hey it's your son's java program");
 
-            System.out.println("sending...");
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }

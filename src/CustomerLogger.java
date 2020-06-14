@@ -45,13 +45,13 @@ public class CustomerLogger extends JPanel {
         lastName.setHorizontalAlignment(SwingConstants.CENTER);
         add(lastName);
 
-        JLabel phoneLabel = new JLabel("Phone Number (No dashes or spaces, include the 1):");
-        phoneLabel.setBounds(140, Display.HEIGHT/2 - 30, 500, 20);
-        add(phoneLabel);
-        JTextField phone = new JTextField("");
-        phone.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 5, 200, 20);
-        phone.setHorizontalAlignment(SwingConstants.CENTER);
-        add(phone);
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setBounds(140, Display.HEIGHT/2 - 30, 500, 20);
+        add(emailLabel);
+        JTextField email = new JTextField("");
+        email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 5, 200, 20);
+        email.setHorizontalAlignment(SwingConstants.CENTER);
+        add(email);
 
         JButton enter = new JButton("Enter");
         enter.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 60, 80, 20);
@@ -60,10 +60,10 @@ public class CustomerLogger extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    b.writer(firstName.getText(), lastName.getText(), phone.getText());
+                    b.writer(firstName.getText(), lastName.getText(), email.getText());
                     firstName.setText("");
                     lastName.setText("");
-                    phone.setText("");
+                    email.setText("");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
