@@ -42,6 +42,7 @@ public class IncidentReport extends JPanel{
 
         JButton enter2 = new JButton("Enter");
         enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
+        add(enter2);
 
         enter1.addActionListener(new ActionListener() {
             @Override
@@ -56,8 +57,9 @@ public class IncidentReport extends JPanel{
                 dates.addItemListener(new ItemListener() {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
-                        chosenDate[0] = String.valueOf(dates.getSelectedItem());
-                        add(enter2);
+                        if(!dates.getSelectedItem().equals("Select Date")) {
+                            chosenDate[0] = String.valueOf(dates.getSelectedItem());
+                        }
                         return;
                     }
                 });
@@ -90,34 +92,37 @@ public class IncidentReport extends JPanel{
         enter2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(loading);
-                remove(loading);
-                //Takes selection from combobox, sends report based on data
-                try {
-                    MailBot bot = new MailBot();
-                    Scanner emailer = new Scanner(new File(chosenDate[0]));
-                    String[] data;
-                    String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
-                    while(emailer.hasNextLine()) {
-                        data = emailer.nextLine().split(",");
-                        bot.sender(data[0], data[1], data[2], date);
+                if(chosenDate[0] != null) {
+                    //Takes selection from combobox, sends report based on data
+                    try {
+                        MailBot bot = new MailBot();
+                        Scanner emailer = new Scanner(new File(chosenDate[0]));
+                        String[] data;
+                        String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
+                        while(emailer.hasNextLine()) {
+                            data = emailer.nextLine().split(",");
+                            bot.sender(data[0], data[1], data[2], date);
+                        }
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
                     }
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
+                    add(success);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    remove(success);
+                    remove(dates);
+                    email.setText("");
+                    dates.removeAllItems();
+                    dates.addItem("Select Date");
+                    return;
                 }
-                //TODO
-                add(success);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
+                else {
+                    return;
                 }
-                remove(success);
-                remove(dates);
-                email.setText("");
-                dates.removeAllItems();
-                dates.addItem("Select Date");
-                return;
+
             }
         });
     }

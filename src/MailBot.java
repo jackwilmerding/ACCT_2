@@ -43,7 +43,7 @@ public class MailBot {
             message.setSubject("Test");
 
             // Now set the actual message
-            message.setText("Hey it's your son's java program");
+            message.setText("Whoopsie you got corona");
 
             // Send message
             Transport.send(message);
