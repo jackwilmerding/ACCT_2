@@ -14,9 +14,9 @@ public class Backend {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     }
-    public HashMap<String, Patron> reader(String queryDate) {
+    public HashMap<String, Patron> reader(String queryDate) throws FileNotFoundException {
         HashMap hm = new HashMap<String, Patron>();
-        Scanner scan = new Scanner(date() + ".csv");
+        Scanner scan = new Scanner(new File(date()));
         while (scan.hasNextLine()) {
             String line = scan.nextLine();
             String[] data = line.split(",");
@@ -57,18 +57,11 @@ public class Backend {
                 while(scan.hasNextLine()) {
                     String line = scan.nextLine();
                     String[] data = line.split(",");
-                    System.out.println(data);
-                    for(int i = 0; i < 3; i++) {
-                        System.out.println(data[i]);
-                    }
                     if (data[0].toLowerCase().equals(email.toLowerCase())) {
                         dateItems.add(file.getName());
                     }
                 }
             }
-        }
-        for(int i = 0; i < dateItems.size(); i++) {
-            System.out.println(dateItems.get(i));
         }
         return dateItems.toArray(new String[dateItems.size()]);
     }

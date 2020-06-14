@@ -22,8 +22,4 @@ public class Display extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
     }
-
-    public static void main(String[] args) {
-        new Display();
-    }
 }

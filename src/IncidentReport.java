@@ -2,6 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class IncidentReport extends JPanel{
     private JPanel cardPanel;
@@ -9,6 +14,7 @@ public class IncidentReport extends JPanel{
     public IncidentReport(JPanel p) {
         cardPanel = p;
         Backend b = new Backend();
+        final String[] chosenDate = new String[1];
 
 
         setSize(Display.WIDTH, Display.HEIGHT);
@@ -28,10 +34,15 @@ public class IncidentReport extends JPanel{
 
         JComboBox dates = new JComboBox();
         dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
+        dates.addItem("Select Item");
 
         JButton enter1 = new JButton("Enter");
         enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
         add(enter1);
+
+        JButton enter2 = new JButton("Enter");
+        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
+
         enter1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -39,9 +50,17 @@ public class IncidentReport extends JPanel{
                 String query = email.getText().toLowerCase();
                 enter1.setText("Searching...");
                 for (String date : b.search(query)) {
-                    dates.addItem(new ComboItem(date));
+                    dates.addItem(date);
                 }
                 add(dates);
+                dates.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        chosenDate[0] = String.valueOf(dates.getSelectedItem());
+                        add(enter2);
+                        return;
+                    }
+                });
                 enter1.setText("Enter");
                 return;
             }
@@ -67,15 +86,25 @@ public class IncidentReport extends JPanel{
         success.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
         success.setForeground(Color.GREEN);
 
-        JButton enter2 = new JButton("Enter");
-        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
-        add(enter2);
+
         enter2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 add(loading);
                 remove(loading);
                 //Takes selection from combobox, sends report based on data
+                try {
+                    MailBot bot = new MailBot();
+                    Scanner emailer = new Scanner(new File(chosenDate[0]));
+                    String[] data;
+                    String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
+                    while(emailer.hasNextLine()) {
+                        data = emailer.nextLine().split(",");
+                        bot.sender(data[0], data[1], data[2], date);
+                    }
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
                 //TODO
                 add(success);
                 try {
@@ -86,6 +115,8 @@ public class IncidentReport extends JPanel{
                 remove(success);
                 remove(dates);
                 email.setText("");
+                dates.removeAllItems();
+                dates.addItem("Select Date");
                 return;
             }
         });
