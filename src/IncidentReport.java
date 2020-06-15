@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class IncidentReport extends JPanel{
@@ -34,7 +35,8 @@ public class IncidentReport extends JPanel{
 
         JComboBox dates = new JComboBox();
         dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
-        dates.addItem("Select Item");
+        dates.addItem("Select Date");
+        add(dates);
 
         JButton enter1 = new JButton("Enter");
         enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
@@ -57,8 +59,12 @@ public class IncidentReport extends JPanel{
                 dates.addItemListener(new ItemListener() {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
-                        if(!dates.getSelectedItem().equals("Select Date")) {
-                            chosenDate[0] = String.valueOf(dates.getSelectedItem());
+                        try {
+                            if(!dates.getSelectedItem().equals("Select Date")) {
+                                chosenDate[0] = String.valueOf(dates.getSelectedItem());
+                            }
+                        } catch (NullPointerException exception) {
+                            System.out.print("Nulled");
                         }
                         return;
                     }
@@ -88,39 +94,47 @@ public class IncidentReport extends JPanel{
         success.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
         success.setForeground(Color.GREEN);
 
-
         enter2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(chosenDate[0] != null) {
-                    //Takes selection from combobox, sends report based on data
-                    try {
-                        MailBot bot = new MailBot();
-                        Scanner emailer = new Scanner(new File(chosenDate[0]));
-                        String[] data;
-                        String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
-                        while(emailer.hasNextLine()) {
-                            data = emailer.nextLine().split(",");
-                            bot.sender(data[0], data[1], data[2], date);
+                try {
+                    if((chosenDate[0] != null) && (!b.searchLog(chosenDate[0]))) {
+                        //Takes selection from combobox, sends report based on data
+                        try {
+                            MailBot bot = new MailBot();
+                            Scanner emailer = new Scanner(new File(chosenDate[0]));
+                            String[] data;
+                            String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
+                            b.writeLog(chosenDate[0]);
+                            while(emailer.hasNextLine()) {
+                                data = emailer.nextLine().split(",");
+                                bot.sender(data[0], data[1], data[2], date);
+                            }
+                        } catch (IOException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
                         }
-                    } catch (FileNotFoundException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
+                        add(success);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        email.setText("");
+                        remove(success);
+                        dates.removeAllItems();
+                        dates.addItem("Select Date");
+                        remove(dates);
+                        return;
                     }
-                    add(success);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
+                    else {
+                        email.setText("");
+                        dates.removeAllItems();
+                        dates.addItem("Select Date");
+                        remove(dates);
+                        return;
                     }
-                    remove(success);
-                    remove(dates);
-                    email.setText("");
-                    dates.removeAllItems();
-                    dates.addItem("Select Date");
-                    return;
-                }
-                else {
-                    return;
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
                 }
 
             }

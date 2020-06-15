@@ -43,7 +43,7 @@ public class CustomerLogger extends JPanel {
         add(lastName);
 
         JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setBounds(Display.HEIGHT/2, Display.HEIGHT/2 - 30, 80, 20);
+        emailLabel.setBounds(Display.WIDTH/2 - 20, Display.HEIGHT/2 - 30, 80, 20);
         add(emailLabel);
         JTextField email = new JTextField("");
         email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 5, 200, 20);

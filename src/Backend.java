@@ -26,6 +26,33 @@ public class Backend {
         return hm;
     }
     */
+    public void writeLog(String date) throws IOException {
+        File file = new File("log.csv");
+        if(file.exists() && !file.isDirectory()) {
+            FileWriter fwriter = new FileWriter("log.csv", true);
+            fwriter.write("\n" + date);
+            fwriter.flush();
+            fwriter.close();
+        }
+        else {
+            FileWriter fWriter = new FileWriter( "log.csv");
+            fWriter.write(date);
+            fWriter.flush();
+            fWriter.close();
+        }
+        return;
+    }
+    public boolean searchLog(String fileName) throws FileNotFoundException {
+        boolean found = false;
+        Scanner logSearcher = new Scanner(new File("log.csv"));
+        while(logSearcher.hasNextLine()) {
+            String line = logSearcher.nextLine();
+            if(line.equals(fileName)) {
+                found = true;
+            }
+        }
+        return found;
+    }
     public void writer(String firstName, String lastName, String email) throws IOException {
         File file = new File(date() + ".csv");
         if(file.exists() && !file.isDirectory()) {
