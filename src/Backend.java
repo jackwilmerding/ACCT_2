@@ -29,13 +29,14 @@ public class Backend {
     public void writeLog(String date) throws IOException {
         File file = new File("log.csv");
         if(file.exists() && !file.isDirectory()) {
-            FileWriter fwriter = new FileWriter("log.csv", true);
+            FileWriter fwriter = new FileWriter(file, true);
             fwriter.write("\n" + date);
             fwriter.flush();
             fwriter.close();
         }
         else {
-            FileWriter fWriter = new FileWriter( "log.csv");
+            file.createNewFile();
+            FileWriter fWriter = new FileWriter( file);
             fWriter.write(date);
             fWriter.flush();
             fWriter.close();
