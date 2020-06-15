@@ -42,14 +42,18 @@ public class Backend {
         }
         return;
     }
-    public boolean searchLog(String fileName) throws FileNotFoundException {
+    public boolean searchLog(String fileName) {
         boolean found = false;
-        Scanner logSearcher = new Scanner(new File("log.csv"));
-        while(logSearcher.hasNextLine()) {
-            String line = logSearcher.nextLine();
-            if(line.equals(fileName)) {
-                found = true;
+        try {
+            Scanner logSearcher = new Scanner(new File("log.csv"));
+            while(logSearcher.hasNextLine()) {
+                String line = logSearcher.nextLine();
+                if(line.equals(fileName)) {
+                    found = true;
+                }
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         return found;
     }
