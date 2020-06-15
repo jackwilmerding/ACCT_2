@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class IncidentReport extends JPanel {
+public class IncidentReport extends JPanel{
     private JPanel cardPanel;
 
     public IncidentReport(JPanel p) {
@@ -22,28 +22,45 @@ public class IncidentReport extends JPanel {
         setLayout(null);
 
         JLabel emailLabel = new JLabel("Customer Email:");
-        emailLabel.setBounds(Display.WIDTH / 2 - 50, Display.HEIGHT / 2 - 70, 500, 20);
+        emailLabel.setBounds(Display.WIDTH/2 - 50, Display.HEIGHT/2 - 70, 500, 20);
         add(emailLabel);
         JTextField email = new JTextField("");
-        email.setBounds(Display.WIDTH / 2 - 105, Display.HEIGHT / 2 - 45, 200, 20);
+        email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 45, 200, 20);
         email.setHorizontalAlignment(SwingConstants.CENTER);
         add(email);
 
         JLabel dateLabel = new JLabel("Date Visited (YYYY-MM-DD):");
-        dateLabel.setBounds(205, Display.HEIGHT / 2 + 10, 500, 20);
+        dateLabel.setBounds(205, Display.HEIGHT/2 + 10, 500, 20);
         add(dateLabel);
 
+        JProgressBar bar = new JProgressBar();
+        bar.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
+        bar.setMinimum(0);
+
         JComboBox dates = new JComboBox();
-        dates.setBounds(Display.WIDTH / 2 - 105, Display.HEIGHT / 2 + 40, 200, 20);
+        dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
         dates.addItem("Select Date");
+        dates.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                try {
+                    if(!dates.getSelectedItem().equals("Select Date")) {
+                        chosenDate[0] = String.valueOf(dates.getSelectedItem());
+                    }
+                } catch (NullPointerException exception) {
+                    System.out.print("");
+                }
+                return;
+            }
+        });
         add(dates);
 
         JButton enter1 = new JButton("Enter");
-        enter1.setBounds(Display.WIDTH / 2 - 60, Display.HEIGHT / 2 - 15, 120, 20);
+        enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
         add(enter1);
 
         JButton enter2 = new JButton("Enter");
-        enter2.setBounds(Display.WIDTH / 2 - 40, Display.HEIGHT / 2 + 70, 80, 20);
+        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
         add(enter2);
 
         enter1.addActionListener(new ActionListener() {
@@ -56,19 +73,6 @@ public class IncidentReport extends JPanel {
                     dates.addItem(date);
                 }
                 add(dates);
-                dates.addItemListener(new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent e) {
-                        try {
-                            if (!dates.getSelectedItem().equals("Select Date")) {
-                                chosenDate[0] = String.valueOf(dates.getSelectedItem());
-                            }
-                        } catch (NullPointerException exception) {
-                            System.out.print("Nulled");
-                        }
-                        return;
-                    }
-                });
                 enter1.setText("Enter");
                 return;
             }
@@ -88,27 +92,41 @@ public class IncidentReport extends JPanel {
         add(backButton);
 
         JLabel loading = new JLabel("Processing...");
-        loading.setBounds(Display.WIDTH / 2 - 60, Display.HEIGHT / 2 + 100, 120, 20);
+        loading.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
 
         JLabel success = new JLabel("Success!");
-        success.setBounds(Display.WIDTH / 2 - 60, Display.HEIGHT / 2 + 100, 120, 20);
+        success.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
         success.setForeground(Color.GREEN);
 
         enter2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if ((chosenDate[0] != null) && (!b.searchLog(chosenDate[0]))) {
+                if((chosenDate[0] != null) && (!b.searchLog(chosenDate[0]))) {
                     //Takes selection from combobox, sends report based on data
                     try {
-                        MailBot bot = new MailBot();
-                        Scanner emailer = new Scanner(new File(chosenDate[0]));
+                        Scanner counter = new Scanner(new File(chosenDate[0]));
+                        int ctr = 0;
+                        while(counter.hasNextLine()) {
+                            ctr++;
+                            counter.nextLine();
+                        }
+                        int i = 0;
+                        bar.setMaximum(ctr);
+                        remove(enter2);
+                        add(bar);
                         String[] data;
                         String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
                         b.writeLog(chosenDate[0]);
-                        while (emailer.hasNextLine()) {
+                        MailBot bot = new MailBot();
+                        Scanner emailer = new Scanner(new File(chosenDate[0]));
+                        while(emailer.hasNextLine()) {
                             data = emailer.nextLine().split(",");
                             bot.sender(data[0], data[1], data[2], date);
+                            i++;
+                            bar.setValue(i);
                         }
+                        remove(bar);
+                        add(enter2);
                     } catch (IOException fileNotFoundException) {
                         fileNotFoundException.printStackTrace();
                     }
@@ -124,7 +142,8 @@ public class IncidentReport extends JPanel {
                     dates.addItem("Select Date");
                     remove(dates);
                     return;
-                } else {
+                }
+                else {
                     email.setText("");
                     dates.removeAllItems();
                     dates.addItem("Select Date");
@@ -132,8 +151,6 @@ public class IncidentReport extends JPanel {
                     return;
                 }
             }
-
-
         });
     }
 }
