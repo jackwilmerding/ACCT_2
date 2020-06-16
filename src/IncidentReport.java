@@ -34,12 +34,16 @@ public class IncidentReport extends JPanel{
         add(dateLabel);
 
         JProgressBar bar = new JProgressBar();
-        bar.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
+        bar.setBounds(0, Display.HEIGHT, Display.WIDTH, 20);
         bar.setMinimum(0);
+        bar.setVisible(false);
+        add(bar);
 
         JComboBox dates = new JComboBox();
         dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
         dates.addItem("Select Date");
+        add(dates);
+        dates.setVisible(false);
         dates.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -53,7 +57,6 @@ public class IncidentReport extends JPanel{
                 return;
             }
         });
-        add(dates);
 
         JButton enter1 = new JButton("Enter");
         enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
@@ -72,7 +75,7 @@ public class IncidentReport extends JPanel{
                 for (String date : b.search(query)) {
                     dates.addItem(date);
                 }
-                add(dates);
+                dates.setVisible(true);
                 enter1.setText("Enter");
                 return;
             }
@@ -82,6 +85,7 @@ public class IncidentReport extends JPanel{
         backButton.setBounds(10, 10, 80, 20);
         backButton.setHorizontalAlignment(SwingConstants.CENTER);
         backButton.setVerticalAlignment(SwingConstants.CENTER);
+        add(backButton);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,14 +93,6 @@ public class IncidentReport extends JPanel{
                 cl.show(cardPanel, "Main Menu");
             }
         });
-        add(backButton);
-
-        JLabel loading = new JLabel("Processing...");
-        loading.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
-
-        JLabel success = new JLabel("Success!");
-        success.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 100, 120, 20);
-        success.setForeground(Color.GREEN);
 
         enter2.addActionListener(new ActionListener() {
             @Override
@@ -112,8 +108,8 @@ public class IncidentReport extends JPanel{
                         }
                         int i = 0;
                         bar.setMaximum(ctr);
-                        remove(enter2);
-                        add(bar);
+                        bar.setVisible(true);
+                        enter2.setVisible(false);
                         String[] data;
                         String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
                         b.writeLog(chosenDate[0]);
@@ -125,29 +121,28 @@ public class IncidentReport extends JPanel{
                             i++;
                             bar.setValue(i);
                         }
-                        remove(bar);
-                        add(enter2);
+                        bar.setValue(0);
+                        bar.setVisible(false);
+                        enter2.setVisible(true);
                     } catch (IOException fileNotFoundException) {
                         fileNotFoundException.printStackTrace();
                     }
-                    add(success);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException interruptedException) {
                         interruptedException.printStackTrace();
                     }
                     email.setText("");
-                    remove(success);
                     dates.removeAllItems();
                     dates.addItem("Select Date");
-                    remove(dates);
+                    dates.setVisible(false);
                     return;
                 }
                 else {
                     email.setText("");
                     dates.removeAllItems();
                     dates.addItem("Select Date");
-                    remove(dates);
+                    dates.setVisible(false);
                     return;
                 }
             }
