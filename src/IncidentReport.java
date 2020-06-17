@@ -33,12 +33,6 @@ public class IncidentReport extends JPanel{
         dateLabel.setBounds(205, Display.HEIGHT/2 + 10, 500, 20);
         add(dateLabel);
 
-        JProgressBar bar = new JProgressBar();
-        bar.setBounds(0, Display.HEIGHT, Display.WIDTH, 20);
-        bar.setMinimum(0);
-        bar.setVisible(false);
-        add(bar);
-
         JComboBox dates = new JComboBox();
         dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
         dates.addItem("Select Date");
@@ -106,31 +100,21 @@ public class IncidentReport extends JPanel{
                             ctr++;
                             counter.nextLine();
                         }
-                        int i = 0;
-                        bar.setMaximum(ctr);
-                        bar.setVisible(true);
-                        enter2.setVisible(false);
                         String[] data;
                         String date = chosenDate[0].substring(0, chosenDate[0].length() - 4);
                         b.writeLog(chosenDate[0]);
                         MailBot bot = new MailBot();
                         Scanner emailer = new Scanner(new File(chosenDate[0]));
+                        String[] addresses = new String[ctr];
+                        int i = 0;
                         while(emailer.hasNextLine()) {
                             data = emailer.nextLine().split(",");
-                            bot.sender(data[0], data[1], data[2], date);
+                            addresses[i] = data[0];
                             i++;
-                            bar.setValue(i);
                         }
-                        bar.setValue(0);
-                        bar.setVisible(false);
-                        enter2.setVisible(true);
+                        bot.sender(addresses, date);
                     } catch (IOException fileNotFoundException) {
                         fileNotFoundException.printStackTrace();
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
                     }
                     email.setText("");
                     dates.removeAllItems();
