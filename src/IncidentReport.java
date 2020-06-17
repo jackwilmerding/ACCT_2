@@ -21,20 +21,33 @@ public class IncidentReport extends JPanel{
         setSize(Display.WIDTH, Display.HEIGHT);
         setLayout(null);
 
+        JLabel attention = new JLabel("<html><div style = 'text-align: center;'>ATTENTION:<br>Please only submit reports for<br>customers who have tested positive.<br><br>If nothing shows up in the \"Select Date\" box,<br>there were no matches to your search.<br>Press the lower enter button to reset the page.</div></html>");
+        attention.setBounds(Display.WIDTH/2 - 140, Display.HEIGHT/2 - 200, 500, 160);
+        attention.setForeground(Color.RED);
+        add(attention);
+
         JLabel emailLabel = new JLabel("Customer Email:");
-        emailLabel.setBounds(Display.WIDTH/2 - 50, Display.HEIGHT/2 - 70, 500, 20);
+        emailLabel.setBounds(Display.WIDTH/2 - 50, Display.HEIGHT/2 - 50, 500, 20);
         add(emailLabel);
         JTextField email = new JTextField("");
-        email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 45, 200, 20);
+        email.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 - 25, 200, 20);
         email.setHorizontalAlignment(SwingConstants.CENTER);
         add(email);
 
+        JLabel success = new JLabel("<html><div style = 'text-align: center;'>Success!</div></html>");
+        success.setForeground(new Color(0, 153, 0));
+        success.setFont(new Font("Helvetica", Font.BOLD, 26));
+        success.setBounds(Display.WIDTH/2 - 55, Display.HEIGHT/2 + 60, 200, 40);
+        add(success);
+        success.setVisible(false);
+
         JLabel dateLabel = new JLabel("Date Visited (YYYY-MM-DD):");
-        dateLabel.setBounds(205, Display.HEIGHT/2 + 10, 500, 20);
+        dateLabel.setBounds(205, Display.HEIGHT/2 + 30, 500, 20);
         add(dateLabel);
+        dateLabel.setVisible(false);
 
         JComboBox dates = new JComboBox();
-        dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 40, 200, 20);
+        dates.setBounds(Display.WIDTH/2 - 105, Display.HEIGHT/2 + 60, 200, 20);
         dates.addItem("Select Date");
         add(dates);
         dates.setVisible(false);
@@ -53,12 +66,13 @@ public class IncidentReport extends JPanel{
         });
 
         JButton enter1 = new JButton("Enter");
-        enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 - 15, 120, 20);
+        enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 5, 120, 20);
         add(enter1);
 
         JButton enter2 = new JButton("Enter");
-        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 70, 80, 20);
+        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 90, 80, 20);
         add(enter2);
+        enter2.setVisible(false);
 
         enter1.addActionListener(new ActionListener() {
             @Override
@@ -69,8 +83,11 @@ public class IncidentReport extends JPanel{
                 for (String date : b.search(query)) {
                     dates.addItem(date);
                 }
+                dateLabel.setVisible(true);
                 dates.setVisible(true);
+                enter2.setVisible(true);
                 enter1.setText("Enter");
+                success.setVisible(false);
                 return;
             }
         });
@@ -120,6 +137,9 @@ public class IncidentReport extends JPanel{
                     dates.removeAllItems();
                     dates.addItem("Select Date");
                     dates.setVisible(false);
+                    dateLabel.setVisible(false);
+                    enter2.setVisible(false);
+                    success.setVisible(true);
                     return;
                 }
                 else {
@@ -127,6 +147,9 @@ public class IncidentReport extends JPanel{
                     dates.removeAllItems();
                     dates.addItem("Select Date");
                     dates.setVisible(false);
+                    dateLabel.setVisible(false);
+                    enter2.setVisible(false);
+                    success.setVisible(true);
                     return;
                 }
             }
