@@ -21,8 +21,8 @@ public class IncidentReport extends JPanel{
         setSize(Display.WIDTH, Display.HEIGHT);
         setLayout(null);
 
-        JLabel attention = new JLabel("<html><div style = 'text-align: center;'>ATTENTION:<br>Please only submit reports for<br>customers who have tested positive.<br><br>If nothing shows up in the \"Select Date\" box,<br>there were no matches to your search.<br>Press the lower enter button to reset the page.</div></html>");
-        attention.setBounds(Display.WIDTH/2 - 140, Display.HEIGHT/2 - 200, 500, 160);
+        JLabel attention = new JLabel("<html><div style = 'text-align: center;'>ATTENTION:<br>Please only submit reports for<br>customers who have tested positive.<br><br>If nothing shows up in the \"Select Date\" box,<br>there were no matches to your search.<br>Press the \"Send Report\" button to reset the page.</div></html>");
+        attention.setBounds(Display.WIDTH/2 - 150, Display.HEIGHT/2 - 200, 500, 160);
         attention.setForeground(Color.RED);
         add(attention);
 
@@ -65,12 +65,12 @@ public class IncidentReport extends JPanel{
             }
         });
 
-        JButton enter1 = new JButton("Enter");
+        JButton enter1 = new JButton("Search");
         enter1.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 5, 120, 20);
         add(enter1);
 
-        JButton enter2 = new JButton("Enter");
-        enter2.setBounds(Display.WIDTH/2 - 40, Display.HEIGHT/2 + 90, 80, 20);
+        JButton enter2 = new JButton("Send Report");
+        enter2.setBounds(Display.WIDTH/2 - 60, Display.HEIGHT/2 + 90, 120, 20);
         add(enter2);
         enter2.setVisible(false);
 
@@ -79,14 +79,12 @@ public class IncidentReport extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 //populates the combobox
                 String query = email.getText().toLowerCase();
-                enter1.setText("Searching...");
                 for (String date : b.search(query)) {
                     dates.addItem(date);
                 }
                 dateLabel.setVisible(true);
                 dates.setVisible(true);
                 enter2.setVisible(true);
-                enter1.setText("Enter");
                 success.setVisible(false);
                 return;
             }
@@ -100,6 +98,13 @@ public class IncidentReport extends JPanel{
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                email.setText("");
+                dateLabel.setVisible(false);
+                dates.setVisible(false);
+                success.setVisible(false);
+                enter2.setVisible(false);
+                dates.removeAllItems();
+                dates.addItem("Select Date");
                 CardLayout cl = (CardLayout) cardPanel.getLayout();
                 cl.show(cardPanel, "Main Menu");
             }
