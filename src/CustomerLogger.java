@@ -56,7 +56,7 @@ public class CustomerLogger extends JPanel {
         enter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if((firstName.getText() != "") && (lastName.getText() != "") && (email.getText() != "")) {
+                if((!firstName.getText().equals("")) && (!lastName.getText().equals("")) && (!email.getText().equals(""))) {
                     try {
                         b.writer(firstName.getText(), lastName.getText(), email.getText());
                         firstName.setText("");
