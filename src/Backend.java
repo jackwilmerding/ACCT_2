@@ -1,8 +1,24 @@
+/*
+Active COVID Contact Tracing (ACCT) Gen 2 / A program designed for small businesses to prevent the spread of COVID-19
+    Copyright (C) 2020 John Wilmerding
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -14,18 +30,6 @@ public class Backend {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     }
-    /*
-    public HashMap<String, Patron> reader(String queryDate) throws FileNotFoundException {
-        HashMap hm = new HashMap<String, Patron>();
-        Scanner scan = new Scanner(new File(date()));
-        while (scan.hasNextLine()) {
-            String line = scan.nextLine();
-            String[] data = line.split(",");
-            hm.put(data[0], new Patron(data[1], data[2], data[0]));
-        }
-        return hm;
-    }
-    */
     public void writeLog(String date) throws IOException {
         File file = new File("log.csv");
         if(file.exists() && !file.isDirectory()) {
